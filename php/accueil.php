@@ -5,21 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>stockage et negoce</title>
     <link rel="stylesheet" href="../style/global.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css" crossorigin="anonymous" />
 </head>
 <body>
 
-    <header class="entete">
-        <div class="contenu-entete">
-
-            <nav class="menu">
-                <a href="accueil.php">ACCEUIL</a>
-                <a href="#">CEPAGE</a>
-                <a href="#">CUVE</a>
-                <a href="#">NEGOCIANT</a>
-                <a href="#">CONTRAT</a>
-            </nav>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <main class="contenu">
         <div class="contient">
@@ -54,7 +44,7 @@
 
             <div class="carte" onclick="window.location.href='livraison.php'">
                 <div class="image">
-                    <img src="../image/contrat.png" alt="livraison">
+                    <img src="../image/livraison.png" alt="livraison">
                 </div>
                 <h3>LIVRAISON</h3>
             </div>
@@ -62,19 +52,7 @@
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="footers">
-            <p><strong>Nos contacts 👉👉</strong></p>
-            <p><strong>téléphone :</strong></p>
-            <p>+225 05 66 95 96 25</p>
-        </div>
-        <div class="footers">
-            <p><strong>adresse email :</strong></p>
-            <p>info@stocketnegoce.com</p>
-            <p><strong>WHATSAPP :</strong></p>
-            <p>+225 07 12 17 13 25</p>
-        </div>
-    </footer>
+    <?php include 'footer.php'; ?>
 
 </body>
 </html>

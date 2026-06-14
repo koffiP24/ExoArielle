@@ -37,6 +37,20 @@
     color: rgb(232, 230, 124); 
 }
 
+.menu a i,
+.footer .footers p i {
+    margin-right: 8px;
+    color: #f5d76e;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #f5d76e;
+}
 
 /* 2. LAYOUT - Alignement Horizontal des blocs */
 .contenu {
