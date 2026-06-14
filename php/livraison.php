@@ -1,3 +1,22 @@
+﻿<?php
+require_once __DIR__ . "/auth.php";
+requireUser();
+
+$message = "";
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
+    $bd = mysqli_connect("localhost", "root", "", "bd_viticole");
+    if ($bd && isset($_POST['numLivraison']) && isset($_POST['datereelLivraison'])) {
+        $numLivraison = mysqli_real_escape_string($bd, $_POST['numLivraison']);
+        $datereelLivraison = mysqli_real_escape_string($bd, $_POST['datereelLivraison']);
+        $sql = "INSERT INTO livraison (numLivraison, datereelLivraison) VALUES ('$numLivraison', '$datereelLivraison')";
+        if (mysqli_query($bd, $sql)) {
+            $message = "Livraison enregistrée avec succès.";
+        } else {
+            $message = "Erreur: " . mysqli_error($bd);
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -13,26 +32,32 @@
     <?php include 'header.php'; ?>
 
     <main class="contenu">
+        <?php if ($message): ?>
+            <div class="message-box <?php echo strpos($message, 'succès') !== false ? 'success auto-hide' : 'error'; ?>">
+                <i class="fa-solid <?php echo strpos($message, 'succès') !== false ? 'fa-check-circle' : 'fa-circle-exclamation'; ?>"></i>
+                <?php echo publicEscape($message); ?>
+            </div>
+        <?php endif; ?>
         <center>
        <fieldset class="formulaire">
-        <legend>LIVRAISON</legend>
-        <form action="livraison.php" method="POST">
-            <table cell-padding="5" coll-padding="5">
-                <tr>
-                    <td>NUMERO DE LIVRAISON</td>
-                    <td><input type="text" name="numLivraison "></td>
-                </tr>
-                <tr>
-                    <td>DATE REEL LIVRAISON</td>
-                    <td><input type="date" name="datereelLivraison"></td>
-                </tr>
-                
-            </table>
-            <div clas = "lesButton">
-                <button type="submit" name="enregistrer" class="enr" >enregistrer</button>
-                <button class="ann" >annuler</button>
-            </div>
-        </form>
+         <legend>LIVRAISON</legend>
+         <form action="livraison.php" method="POST">
+             <table cell-padding="5" coll-padding="5">
+                 <tr>
+                     <td>NUMERO DE LIVRAISON</td>
+                     <td><input type="text" name="numLivraison" required></td>
+                 </tr>
+                 <tr>
+                     <td>DATE REEL LIVRAISON</td>
+                     <td><input type="date" name="datereelLivraison" required></td>
+                 </tr>
+                 
+             </table>
+             <div class="lesButton">
+                 <button type="submit" name="enregistrer" class="enr" >enregistrer</button>
+                 <button type="reset" class="ann" >annuler</button>
+             </div>
+         </form>
        </fieldset>
        </center>
     </main>
@@ -42,45 +67,5 @@
 </body>
 </html>
 
-<?php
 
-    if (isset($_POST['enregistrer'])) 
-    {
-        echo "enregistrer existe";
-        // connexion à la bd
-        $bd = mysqli_connect("localhost", "root", "", "bd_viticole");
 
-        if (isset($_POST['numLivraison']) && isset($_POST['datereelLivraison']))
-        {
-            $numLivraison = $_POST['numLivraison'];
-            $datereelLivraison = $_POST['datereelLivraison'];
-
-            echo "tout est clean ";
-
-            if ($bd)
-            {
-                echo "connexion etablie";
-                // requête d'insertion dans la bd
-                $sql = "INSERT INTO livraison (numLivraison, datereelLivraison)
-                    VALUES('$numLivraison', '$datereelLivraison')";
-
-                $exe = mysqli_query($bd, $sql);
-                if ($exe) {
-                    echo " felicitation";
-                }
-                else {
-                    echo "erreur sql";
-                }
-
-            }
-            else
-            {
-                echo "connexion echouée";
-            }
-        }
-        
-    }
-
-    
-
-?>

@@ -1,3 +1,7 @@
+﻿<?php
+require_once __DIR__ . "/auth.php";
+requireUser();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>

@@ -1,5 +1,24 @@
+﻿<?php
+require_once __DIR__ . "/auth.php";
+requireUser();
 
-
+$message = "";
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
+    $bd = mysqli_connect("localhost", "root", "", "bd_viticole");
+    if ($bd && isset($_POST['nom']) && isset($_POST['couleur']) && isset($_POST['sucre']) && isset($_POST['region'])) {
+        $nomCepage = mysqli_real_escape_string($bd, $_POST['nom']);
+        $couleurCepage = mysqli_real_escape_string($bd, $_POST['couleur']);
+        $teneurSucre = (int)$_POST['sucre'];
+        $regionOrigine = mysqli_real_escape_string($bd, $_POST['region']);
+        $sql = "INSERT INTO cepage (nomCepage, couleurCepage, teneurSucre, regionOrigine) VALUES ('$nomCepage', '$couleurCepage', '$teneurSucre', '$regionOrigine')";
+        if (mysqli_query($bd, $sql)) {
+            $message = "Cépage enregistré avec succès.";
+        } else {
+            $message = "Erreur: " . mysqli_error($bd);
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -15,34 +34,40 @@
     <?php include 'header.php'; ?>
 
     <main class="contenu">
+        <?php if ($message): ?>
+            <div class="message-box <?php echo strpos($message, 'succès') !== false ? 'success auto-hide' : 'error'; ?>">
+                <i class="fa-solid <?php echo strpos($message, 'succès') !== false ? 'fa-check-circle' : 'fa-circle-exclamation'; ?>"></i>
+                <?php echo publicEscape($message); ?>
+            </div>
+        <?php endif; ?>
         <center>
        <fieldset class="formulaire">
-        <legend>CEPAGE</legend>
-        <form action="cepage.php" method="POST">
-            <table>
-                <tr>
-                    <td>NOM DU CEPAGE </td>
-                    <td><input type="text" name="nom" ></td>
-                </tr>
-                <tr>
-                    <td>COULEUR</td>
-                    <td><input type="text" name="couleur" ></td>
-                </tr>
-                <tr>
-                    <td>TENEUR EN SUCRE</td>
-                    <td><input type="number" name="sucre" ></td>
-                </tr>
-                <tr>
-                    <td>REGION D'ORIGINE</td>
-                    <td><input type="text" name="region" ></td>
-                </tr>
+         <legend>CEPAGE</legend>
+         <form action="cepage.php" method="POST">
+             <table>
+                 <tr>
+                     <td>NOM DU CEPAGE </td>
+                     <td><input type="text" name="nom" required></td>
+                 </tr>
+                 <tr>
+                     <td>COULEUR</td>
+                     <td><input type="text" name="couleur" required></td>
+                 </tr>
+                 <tr>
+                     <td>TENEUR EN SUCRE</td>
+                     <td><input type="number" name="sucre" required></td>
+                 </tr>
+                 <tr>
+                     <td>REGION D'ORIGINE</td>
+                     <td><input type="text" name="region" required></td>
+                 </tr>
 
-            </table>
-            <div clas = "lesButton">
-                <button type="submit" name="enregistrer" class="enr" >enregistrer</button>
-                <button class="ann" >annuler</button>
-            </div>
-        </form>
+             </table>
+             <div class="lesButton">
+                 <button type="submit" name="enregistrer" class="enr" >enregistrer</button>
+                 <button type="reset" class="ann" >annuler</button>
+             </div>
+         </form>
        </fieldset>
        </center>
     </main>
@@ -52,45 +77,5 @@
 </body>
 </html>
 
-<?php
 
-    if (isset($_POST['enregistrer'])) 
-    {
 
-        // connexion à la bd
-        $bd = mysqli_connect("localhost", "root", "", "bd_viticole");
-
-        if (isset($_POST['nom']) && isset($_POST['couleur']) && isset($_POST['sucre']) && isset($_POST['region']))
-        {
-            $nomCepage = $_POST['nom'];
-            $couleurCepage = $_POST['couleur'];
-            $teneurSucre = $_POST['sucre'];
-            $regionOrigine = $_POST['region'];
-
-            if ($bd)
-            {
-                echo "connexion etablie";
-                // requête d'insertion dans la bd
-                $sql = "INSERT INTO cepage (nomCepage, couleurCepage, teneurSucre, regionOrigine)
-                    VALUES('$nomCepage', '$couleurCepage', '$teneurSucre', '$regionOrigine')";
-
-                $exe = mysqli_query($bd, $sql);
-                if ($exe) {
-                    echo "felicitation";
-                }
-                else {
-                    echo "erreur sql";
-                }
-
-            }
-            else
-            {
-                echo "connexion echouée";
-            }
-        }
-        
-    }
-
-    
-
-?>

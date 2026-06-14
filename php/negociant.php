@@ -1,3 +1,24 @@
+﻿<?php
+require_once __DIR__ . "/auth.php";
+requireUser();
+
+$message = "";
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
+    $bd = mysqli_connect("localhost", "root", "", "bd_viticole");
+    if ($bd && isset($_POST['nom']) && isset($_POST['prenom']) && isset($_POST['tel']) && isset($_POST['idNegociant'])) {
+        $idNegociant = mysqli_real_escape_string($bd, $_POST['idNegociant']);
+        $nomNegociant = mysqli_real_escape_string($bd, $_POST['nom']);
+        $preNegociant = mysqli_real_escape_string($bd, $_POST['prenom']);
+        $telNegociant = mysqli_real_escape_string($bd, $_POST['tel']);
+        $sql = "INSERT INTO negociant (idNegociant, nomNegociant, preNegociant, telNegociant) VALUES ('$idNegociant', '$nomNegociant', '$preNegociant', '$telNegociant')";
+        if (mysqli_query($bd, $sql)) {
+            $message = "Négociant enregistré avec succès.";
+        } else {
+            $message = "Erreur: " . mysqli_error($bd);
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -15,6 +36,12 @@
     <?php include 'header.php'; ?>
 
     <main class="contenu">
+        <?php if ($message): ?>
+            <div class="message-box <?php echo strpos($message, 'succès') !== false ? 'success auto-hide' : 'error'; ?>">
+                <i class="fa-solid <?php echo strpos($message, 'succès') !== false ? 'fa-check-circle' : 'fa-circle-exclamation'; ?>"></i>
+                <?php echo publicEscape($message); ?>
+            </div>
+        <?php endif; ?>
         <center>
             <fieldset class="formulaire">
                 <legend>NEGOCIANT</legend>
@@ -22,24 +49,24 @@
                     <table cell-padding="5" coll-padding="5">
                         <tr>
                             <td>IDENTIFIANT</td>
-                            <td><input type="text" name="idNegociant"></td>
+                            <td><input type="text" name="idNegociant" required></td>
                         </tr>
                         <tr>
                             <td>NOM</td>
-                            <td><input type="text" name="nom"></td>
+                            <td><input type="text" name="nom" required></td>
                         </tr>
                         <tr>
                             <td>PRENOM</td>
-                            <td><input type="text" name="prenom"></td>
+                            <td><input type="text" name="prenom" required></td>
                         </tr>
                         <tr>
                             <td>TELEPHONE</td>
-                            <td><input type="text" name="tel"></td>
+                            <td><input type="text" name="tel" required></td>
                         </tr>
                     </table>
-                    <div clas="lesButton">
+                    <div class="lesButton">
                         <button type="submit" name="enregistrer" class="enr">enregistrer</button>
-                        <button class="ann">annuler</button>
+                        <button type="reset" class="ann">annuler</button>
                     </div>
                 </form>
             </fieldset>
@@ -52,38 +79,5 @@
 
 </html>
 
-<?php
-
-if (isset($_POST['enregistrer'])) {
-
-    // connexion à la bd
-    $bd = mysqli_connect("localhost", "root", "", "bd_viticole");
-
-    if (isset($_POST['nom']) && isset($_POST['prenom']) && isset($_POST['tel']) && isset($_POST['idNegociant'])) {
-
-        $idNegociant = $_POST['idNegociant'];
-        $nomNegociant = $_POST['nom'];
-        $preNegociant = $_POST['prenom'];
-        $telNegociant = $_POST['tel'];
-
-        if ($bd) {
-            echo "connexion etablie";
-            // requête d'insertion dans la bd
-            $sql = "INSERT INTO negociant (idNegociant, nomNegociant, preNegociant, telNegociant)
-                    VALUES('$idNegociant', '$nomNegociant', '$preNegociant', '$telNegociant')";
-
-            $exe = mysqli_query($bd, $sql);
-            if ($exe) {
-                echo " felicitation";
-            } else {
-                echo "erreur sql";
-            }
-        } else {
-            echo "connexion echouée";
-        }
-    }
-}
 
 
-
-?>
