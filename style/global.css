@@ -1,0 +1,123 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.entete {
+    width: 100%;
+    height: 150px;
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../image/banner.png'); /* Remplace par ton image */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenu-entete {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.menu a:hover{
+    color: rgb(232, 230, 124); 
+}
+
+
+/* 2. LAYOUT - Alignement Horizontal des blocs */
+.contenu {
+    padding: 50px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: rgba(57, 8, 18, 0.753);
+}
+
+.contient {
+    display: flex; /* Active l'alignement horizontal */
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap; /* Permet de passer à la ligne sur mobile */
+}
+
+
+.carte {
+    flex: 1; 
+    min-width: 200px;
+    border: 2px solid #cfcfcf;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s;
+    background-color: #fff4f4;
+}
+
+.carte:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.image {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.image img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* 3. FOOTER */
+.footer {
+    background-color: #222;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 5px;
+}
+
+.footers p {
+    margin-bottom: 5px;
+}
+
+.formulaire{
+    background-color: rgba(119, 120, 119, 0.525);
+    border: 2px solid gray;
+    border-radius: 10px 10px 10px 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    width: 50%;
+    height: 200px;
+
+}
+
+.formulaire table tr td{
+    padding-top: 10px;
+}
+
+legend{
+    font-weight: bold;
+    color: gold;
+}
