@@ -1,8 +1,10 @@
 <?php
+// Chargement des dépendances: configuration et layout commun
 require_once __DIR__ . "/config.php";
 requireAdmin();
 require_once __DIR__ . "/layout.php";
 
+// Définition des statistiques à afficher sur le tableau de bord
 $stats = [
     ["Cépages", "cepage", "fa-wine-bottle", "manage-cepage.php"],
     ["Cuves", "cuve", "fa-warehouse", "manage-cuve.php"],
@@ -13,6 +15,7 @@ $stats = [
 
 adminPageStart("Tableau de bord", "dashboard", "fa-chart-line");
 ?>
+<!-- Grille de statistiques avec compteur d'enregistrements -->
 <div class="stats-grid">
     <?php foreach ($stats as $stat): ?>
         <a class="stat-card" href="<?php echo $stat[3]; ?>" style="text-decoration:none;">
@@ -23,6 +26,7 @@ adminPageStart("Tableau de bord", "dashboard", "fa-chart-line");
     <?php endforeach; ?>
 </div>
 
+<!-- Section des accès rapides vers les formulaires d'ajout -->
 <section class="dashboard-section">
     <h2>Accès rapide</h2>
     <div class="quick-access">

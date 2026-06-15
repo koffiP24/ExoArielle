@@ -1,15 +1,19 @@
 <?php
+// Chargement des fonctions d'authentification
 require_once __DIR__ . "/auth.php";
 
+// Redirection si déjà connecté
 if (isUserLoggedIn()) {
     header("Location: accueil.php");
     exit();
 }
 
+// Détermination du mode: connexion ou inscription
 $mode = isset($_GET["mode"]) && $_GET["mode"] === "inscription" ? "inscription" : "connexion";
 $error = "";
 $success = "";
 
+// Traitement du formulaire de connexion/inscription
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $action = isset($_POST["action"]) ? $_POST["action"] : "connexion";
     $email = trim(isset($_POST["email"]) ? $_POST["email"] : "");
@@ -22,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $mode = "inscription";
         $nom = trim(isset($_POST["nom"]) ? $_POST["nom"] : "");
 
+        // Validation des champs d'inscription
         if ($nom === "" || $email === "" || $password === "") {
             $error = "Tous les champs sont obligatoires.";
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -29,12 +34,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } elseif (strlen($password) < 6) {
             $error = "Le mot de passe doit contenir au moins 6 caractères.";
         } else {
+            // Vérification si l'email existe déjà
             $emailSql = mysqli_real_escape_string($conn, $email);
             $exists = mysqli_query($conn, "SELECT idUtilisateur FROM utilisateur WHERE email = '$emailSql' LIMIT 1");
 
             if ($exists && mysqli_num_rows($exists) > 0) {
                 $error = "Un compte existe déjà avec cette adresse email.";
             } else {
+                // Création du nouveau compte utilisateur
                 $nomSql = mysqli_real_escape_string($conn, $nom);
                 $passwordHash = mysqli_real_escape_string($conn, password_hash($password, PASSWORD_DEFAULT));
                 $sql = "INSERT INTO utilisateur (nomUtilisateur, email, motDePasse) VALUES ('$nomSql', '$emailSql', '$passwordHash')";
@@ -50,21 +57,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
         $mode = "connexion";
 
+        // Validation des champs de connexion
         if ($email === "" || $password === "") {
             $error = "Email et mot de passe obligatoires.";
         } else {
+            // Recherche de l'utilisateur en base
             $emailSql = mysqli_real_escape_string($conn, $email);
             $result = mysqli_query($conn, "SELECT * FROM utilisateur WHERE email = '$emailSql' LIMIT 1");
 
             if ($result && mysqli_num_rows($result) === 1) {
                 $user = mysqli_fetch_assoc($result);
 
+                // Vérification du mot de passe et création de session
                 if (password_verify($password, $user["motDePasse"])) {
                     $_SESSION["user_logged_in"] = true;
                     $_SESSION["user_id"] = $user["idUtilisateur"];
                     $_SESSION["user_name"] = $user["nomUtilisateur"];
                     $_SESSION["user_email"] = $user["email"];
                     $_SESSION["user_role"] = $user["role"];
+                    // Redirection selon le rôle
                     if ($user["role"] === "admin") {
                         header("Location: ../admin/dashboard.php");
                     } else {
@@ -79,29 +90,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
+<!-- Page HTML de connexion/inscription -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Stock & Négoce</title>
+    <title>Connexion - Stock & Négociant</title>
     <link rel="stylesheet" href="../style/global.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css" crossorigin="anonymous" />
 </head>
 <body class="auth-page">
     <main class="auth-shell">
+        <!-- Panneau d'authentification -->
         <section class="auth-panel">
+            <!-- En-tête du formulaire -->
             <div class="auth-brand">
                 <i class="fa-solid fa-wine-bottle"></i>
-                <h1>Stock & Négoce</h1>
+                <h1>Stock & Négociant</h1>
                 <p>Accès sécurisé à la gestion viticole</p>
             </div>
 
+            <!-- Onglets connexion/inscription -->
             <div class="auth-tabs">
                 <a class="<?php echo $mode === "connexion" ? "active" : ""; ?>" href="connexion.php">Connexion</a>
                 <a class="<?php echo $mode === "inscription" ? "active" : ""; ?>" href="connexion.php?mode=inscription">Inscription</a>
             </div>
 
+            <!-- Affichage des messages d'erreur ou de succès -->
             <?php if ($error): ?>
                 <div class="auth-message error"><i class="fa-solid fa-circle-exclamation"></i> <?php echo publicEscape($error); ?></div>
             <?php endif; ?>
@@ -110,10 +126,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div class="auth-message success"><i class="fa-solid fa-check-circle"></i> <?php echo publicEscape($success); ?></div>
             <?php endif; ?>
 
+            <!-- Formulaire de connexion/inscription -->
             <form method="POST" class="auth-form">
                 <input type="hidden" name="action" value="<?php echo $mode; ?>">
 
                 <?php if ($mode === "inscription"): ?>
+                    <!-- Champ supplémentaire pour l'inscription -->
                     <label for="nom">Nom complet</label>
                     <input type="text" id="nom" name="nom" placeholder="Votre nom" required>
                 <?php endif; ?>

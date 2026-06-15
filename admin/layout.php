@@ -1,5 +1,7 @@
 <?php
+// Génère la navigation latérale de l'administration
 function adminNav($active = "") {
+    // Tableau des liens de navigation avec icône et clé d'activation
     $items = [
         "dashboard.php" => ["Tableau de bord", "fa-chart-line", "dashboard"],
         "manage-cepage.php" => ["Cépages", "fa-wine-bottle", "cepage"],
@@ -10,11 +12,13 @@ function adminNav($active = "") {
     ];
     ?>
     <aside class="admin-sidebar">
+        <!-- En-tête avec logo et titre -->
         <div class="sidebar-header">
             <h2><i class="fa-solid fa-wine-bottle"></i> <span>Stock & Négoce</span></h2>
             <p>Administration</p>
         </div>
 
+        <!-- Menu de navigation principal -->
         <nav class="sidebar-nav">
             <?php foreach ($items as $href => $item): ?>
                 <a href="<?php echo $href; ?>" class="nav-item <?php echo $active === $item[2] ? "active" : ""; ?>">
@@ -22,10 +26,12 @@ function adminNav($active = "") {
                     <span><?php echo $item[0]; ?></span>
                 </a>
             <?php endforeach; ?>
+            <!-- Lien vers le site public -->
             <a href="../php/accueil.php" class="nav-item">
                 <i class="fa-solid fa-eye"></i>
                 <span>Voir le site</span>
             </a>
+            <!-- Bouton de déconnexion -->
             <a href="logout.php" class="nav-item logout">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 <span>Déconnexion</span>
@@ -35,6 +41,7 @@ function adminNav($active = "") {
     <?php
 }
 
+// Génère l'en-tête HTML et le début de page admin
 function adminPageStart($title, $active, $icon) {
     ?>
     <!DOCTYPE html>
@@ -55,6 +62,7 @@ function adminPageStart($title, $active, $icon) {
                         <p class="admin-kicker">Espace administrateur</p>
                         <h1><i class="fa-solid <?php echo $icon; ?>"></i> <?php echo e($title); ?></h1>
                     </div>
+                    <!-- Affichage des informations utilisateur connecté -->
                     <div class="admin-user-info">
                         <i class="fa-solid fa-user-circle"></i>
                         <span><?php echo e(isset($_SESSION["admin_nom"]) ? $_SESSION["admin_nom"] : (isset($_SESSION["user_name"]) ? $_SESSION["user_name"] : "admin")); ?></span>
@@ -64,6 +72,7 @@ function adminPageStart($title, $active, $icon) {
     <?php
 }
 
+// Génère la fin de page HTML
 function adminPageEnd() {
     ?>
                 </div>

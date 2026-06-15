@@ -1,7 +1,9 @@
 ﻿<?php
+// Chargement des fonctions d'authentification et vérification de connexion
 require_once __DIR__ . "/auth.php";
 requireUser();
 
+// Récupération de la liste des négociants pour le formulaire
 $conn = publicDb();
 $negociants = [];
 if ($conn) {
@@ -13,10 +15,12 @@ if ($conn) {
     }
 }
 
+// Traitement de l'enregistrement d'un contrat
 $message = "";
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
     $bd = mysqli_connect("localhost", "root", "", "bd_viticole");
     if ($bd && isset($_POST['datecontrat']) && isset($_POST['echeContrat']) && isset($_POST['qtlivContrat']) && isset($_POST['datelivContrat']) && isset($_POST['idNegociant'])) {
+        // Sécurisation des entrées et insertion en base de données
         $datecontrat = mysqli_real_escape_string($bd, $_POST['datecontrat']);
         $echeContrat = mysqli_real_escape_string($bd, $_POST['echeContrat']);
         $qtlivContrat = (int)$_POST['qtlivContrat'];
@@ -31,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
     }
 }
 ?>
+<!-- Page HTML pour la gestion des contrats -->
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -49,12 +54,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
     <?php include 'header.php'; ?>
 
     <main class="contenu">
+        <!-- Affichage du message de succès ou d'erreur -->
         <?php if ($message): ?>
             <div class="message-box <?php echo strpos($message, 'succès') !== false ? 'success auto-hide' : 'error'; ?>">
                 <i class="fa-solid <?php echo strpos($message, 'succès') !== false ? 'fa-check-circle' : 'fa-circle-exclamation'; ?>"></i>
                 <?php echo publicEscape($message); ?>
             </div>
         <?php endif; ?>
+        <!-- Formulaire d'ajout d'un contrat -->
         <center>
             <fieldset class="formulaire">
                 <legend>CONTRAT</legend>
@@ -79,6 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
                         <tr>
                             <td>NEGOCIANT</td>
                             <td>
+                                <!-- Sélection du négociant lié au contrat -->
                                 <select name="idNegociant" required>
                                     <option value="">Sélectionner un négociant</option>
                                     <?php foreach ($negociants as $negociant): ?>

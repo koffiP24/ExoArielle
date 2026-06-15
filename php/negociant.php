@@ -1,11 +1,14 @@
 ﻿<?php
+// Chargement des fonctions d'authentification et vérification de connexion
 require_once __DIR__ . "/auth.php";
 requireUser();
 
+// Traitement de l'enregistrement d'un négociant
 $message = "";
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
     $bd = mysqli_connect("localhost", "root", "", "bd_viticole");
     if ($bd && isset($_POST['nom']) && isset($_POST['prenom']) && isset($_POST['tel']) && isset($_POST['idNegociant'])) {
+        // Sécurisation des entrées et insertion en base de données
         $idNegociant = mysqli_real_escape_string($bd, $_POST['idNegociant']);
         $nomNegociant = mysqli_real_escape_string($bd, $_POST['nom']);
         $preNegociant = mysqli_real_escape_string($bd, $_POST['prenom']);
@@ -19,9 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
     }
 }
 ?>
+<!-- Page HTML pour la gestion des négociants -->
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,12 +39,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
     <?php include 'header.php'; ?>
 
     <main class="contenu">
+        <!-- Affichage du message de succès ou d'erreur -->
         <?php if ($message): ?>
             <div class="message-box <?php echo strpos($message, 'succès') !== false ? 'success auto-hide' : 'error'; ?>">
                 <i class="fa-solid <?php echo strpos($message, 'succès') !== false ? 'fa-check-circle' : 'fa-circle-exclamation'; ?>"></i>
                 <?php echo publicEscape($message); ?>
             </div>
         <?php endif; ?>
+        <!-- Formulaire d'ajout d'un négociant -->
         <center>
             <fieldset class="formulaire">
                 <legend>NEGOCIANT</legend>

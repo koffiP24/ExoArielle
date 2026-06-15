@@ -1,11 +1,14 @@
 ﻿<?php
+// Chargement des fonctions d'authentification et vérification de connexion
 require_once __DIR__ . "/auth.php";
 requireUser();
 
+// Traitement de l'enregistrement d'un cépage
 $message = "";
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
     $bd = mysqli_connect("localhost", "root", "", "bd_viticole");
     if ($bd && isset($_POST['nom']) && isset($_POST['couleur']) && isset($_POST['sucre']) && isset($_POST['region'])) {
+        // Sécurisation des entrées et insertion en base de données
         $nomCepage = mysqli_real_escape_string($bd, $_POST['nom']);
         $couleurCepage = mysqli_real_escape_string($bd, $_POST['couleur']);
         $teneurSucre = (int)$_POST['sucre'];
@@ -19,6 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
     }
 }
 ?>
+<!-- Page HTML pour la gestion des cépages -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -34,40 +38,42 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['enregistrer'])) {
     <?php include 'header.php'; ?>
 
     <main class="contenu">
+        <!-- Affichage du message de succès ou d'erreur -->
         <?php if ($message): ?>
             <div class="message-box <?php echo strpos($message, 'succès') !== false ? 'success auto-hide' : 'error'; ?>">
                 <i class="fa-solid <?php echo strpos($message, 'succès') !== false ? 'fa-check-circle' : 'fa-circle-exclamation'; ?>"></i>
                 <?php echo publicEscape($message); ?>
             </div>
         <?php endif; ?>
+        <!-- Formulaire d'ajout d'un cépage -->
         <center>
        <fieldset class="formulaire">
-         <legend>CEPAGE</legend>
-         <form action="cepage.php" method="POST">
-             <table>
-                 <tr>
-                     <td>NOM DU CEPAGE </td>
-                     <td><input type="text" name="nom" required></td>
-                 </tr>
-                 <tr>
-                     <td>COULEUR</td>
-                     <td><input type="text" name="couleur" required></td>
-                 </tr>
-                 <tr>
-                     <td>TENEUR EN SUCRE</td>
-                     <td><input type="number" name="sucre" required></td>
-                 </tr>
-                 <tr>
-                     <td>REGION D'ORIGINE</td>
-                     <td><input type="text" name="region" required></td>
-                 </tr>
+          <legend>CEPAGE</legend>
+          <form action="cepage.php" method="POST">
+              <table>
+                  <tr>
+                      <td>NOM DU CEPAGE </td>
+                      <td><input type="text" name="nom" required></td>
+                  </tr>
+                  <tr>
+                      <td>COULEUR</td>
+                      <td><input type="text" name="couleur" required></td>
+                  </tr>
+                  <tr>
+                      <td>TENEUR EN SUCRE</td>
+                      <td><input type="number" name="sucre" required></td>
+                  </tr>
+                  <tr>
+                      <td>REGION D'ORIGINE</td>
+                      <td><input type="text" name="region" required></td>
+                  </tr>
 
-             </table>
-             <div class="lesButton">
-                 <button type="submit" name="enregistrer" class="enr" >enregistrer</button>
-                 <button type="reset" class="ann" >annuler</button>
-             </div>
-         </form>
+              </table>
+              <div class="lesButton">
+                  <button type="submit" name="enregistrer" class="enr" >enregistrer</button>
+                  <button type="reset" class="ann" >annuler</button>
+              </div>
+          </form>
        </fieldset>
        </center>
     </main>
